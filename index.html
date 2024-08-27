@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oil Change Labor Cost Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 15px rgba(0,0,0,0.1);
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 16px;
+        }
+        .result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Oil Change Labor Cost Calculator</h1>
+
+        <!-- Input for quarts of oil -->
+        <label for="quarts">Number of Quarts of Oil (min 4):</label>
+        <input type="number" id="quarts" min="4" value="4" required>
+
+        <!-- Input for part costs (multiple) -->
+        <label for="partCosts">Enter Additional Part Costs (comma separated):</label>
+        <input type="text" id="partCosts" placeholder="e.g. 15.99, 12.50">
+
+        <!-- Button to calculate the labor cost -->
+        <button onclick="calculateLabor()">Calculate Labor Cost</button>
+
+        <!-- Display the result -->
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        // JavaScript logic to calculate labor cost
+        const oilChangeCost = 69.99;
+        const costPerQuart = 6.27;
+        const maxQuarts = 5;
+
+        function calculateLabor() {
+            // Get input values
+            let numberOfQuarts = parseFloat(document.getElementById('quarts').value);
+            let partCostsInput = document.getElementById('partCosts').value;
+
+            // Parse part costs
+            let partCosts = partCostsInput ? partCostsInput.split(',').map(cost => parseFloat(cost.trim())) : [];
+
+            // Calculate quart cost, capped at 5 quarts
+            let quartsCost = Math.min(numberOfQuarts, maxQuarts) * costPerQuart;
+
+            // Sum part costs
+            let totalPartCosts = partCosts.reduce((sum, partCost) => sum + partCost, 0);
+
+            // Calculate total cost
+            let totalCost = quartsCost + totalPartCosts;
+
+            // Calculate labor cost as the absolute difference from the oil change cost
+            let laborCost = Math.abs(oilChangeCost - totalCost).toFixed(2);
+
+            // Display the result
+            document.getElementById('result').innerText = `The labor cost is: $${laborCost}`;
+        }
+    </script>
+</body>
+</html>
