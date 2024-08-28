@@ -106,7 +106,10 @@
 
         function copyToClipboard() {
             let resultText = document.getElementById('result').innerText;
-            navigator.clipboard.writeText(resultText).then(function() {
+            let numericValue = resultText.match(/[\d.]+/)[0];  // Extract only the digits and decimal point
+            
+            // Copy the numeric value to the clipboard
+            navigator.clipboard.writeText(numericValue).then(function() {
                 alert('Labor cost copied to clipboard!');
             }, function(err) {
                 console.error('Could not copy text: ', err);
