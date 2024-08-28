@@ -5,101 +5,287 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Oil Change Labor Cost Calculator</title>
     <style>
+        :root {
+            --bg-color: #f8f9fa;
+            --container-bg: white;
+            --text-color: #333;
+            --header-color: #2c3e50;
+            --label-color: #34495e;
+            --input-border: #bdc3c7;
+            --input-focus: #3498db;
+            --button-bg: #3498db;
+            --button-color: white;
+            --button-hover: #2980b9;
+            --result-bg: #ecf0f1;
+            --result-color: #2c3e50;
+            --copy-button-bg: #2ecc71;
+            --copy-button-hover: #27ae60;
+            --disclaimer-color: #7f8c8d;
+            --add-part-bg: #95a5a6;
+            --add-part-hover: #7f8c8d;
+            --glow-color: rgba(255, 255, 255, 0.1);
+            --toggle-bg: #ddd;
+            --toggle-button: #fff;
+        }
+
+        .dark-mode {
+            --bg-color: #2c3e50;
+            --container-bg: #34495e;
+            --text-color: #ecf0f1;
+            --header-color: #3498db;
+            --label-color: #bdc3c7;
+            --input-border: #7f8c8d;
+            --input-focus: #2980b9;
+            --button-bg: #2980b9;
+            --button-color: #ecf0f1;
+            --button-hover: #2980b9;
+            --result-bg: #2e4155;
+            --result-color: #ecf0f1;
+            --copy-button-bg: #27ae60;
+            --copy-button-hover: #2ecc71;
+            --disclaimer-color: #bdc3c7;
+            --add-part-bg: #7f8c8d;
+            --add-part-hover: #95a5a6;
+            --glow-color: rgba(52, 152, 219, 0.1);
+            --toggle-bg: #555;
+            --toggle-button: #34495e;
+        }
+
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             padding: 20px;
-            background-color: #f4f4f4;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: all 0.3s ease;
         }
         .container {
-            max-width: 400px;
+            max-width: 500px;
             margin: 0 auto;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 0px 15px rgba(0,0,0,0.1);
+            background: var(--container-bg);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px var(--glow-color), 0 0 0 1px rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        .container::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, var(--glow-color) 0%, transparent 70%);
+            opacity: 0.5;
+            pointer-events: none;  /* This allows clicks to pass through */
+            z-index: 0;  /* Ensures the pseudo-element stays behind the content */
+        }
+        .container > * {
+            position: relative;  /* Ensures all child elements are above the pseudo-element */
+            z-index: 1;
+        }
+        h1 {
+            color: var(--header-color);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+            color: var(--label-color);
         }
         input, button {
             width: 100%;
-            padding: 10px;
-            margin: 10px 0;
+            padding: 12px;
+            margin: 8px 0;
             font-size: 16px;
+            border: 1px solid var(--input-border);
+            border-radius: 5px;
+            box-sizing: border-box;
+            background-color: var(--container-bg);
+            color: var(--text-color);
+        }
+        input:focus {
+            outline: none;
+            border-color: var(--input-focus);
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+        }
+        .calculate-btn {
+            background-color: var(--button-bg);
+            color: var(--button-color);
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .calculate-btn:hover {
+            background-color: var(--button-hover);
         }
         .result {
             margin-top: 20px;
+            padding: 15px;
+            background-color: var(--result-bg);
+            border-radius: 5px;
+            text-align: center;
+        }
+        .result-value {
+            font-size: 24px;
             font-weight: bold;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            color: var(--result-color);
+        }
+        .copy-btn {
+            background-color: var(--copy-button-bg);
+            color: var(--button-color);
+            border: none;
+            cursor: pointer;
+            padding: 8px 15px;
+            margin-top: 10px;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+        .copy-btn:hover {
+            background-color: var(--copy-button-hover);
         }
         .disclaimer {
             font-size: 12px;
-            color: grey;
-            margin-top: 10px;
+            color: var(--disclaimer-color);
+            margin-top: 20px;
+            text-align: center;
+            opacity: 0.6;
         }
         .add-part {
-            margin-top: 5px;
-            padding: 5px;
-            background-color: #ddd;
+            background-color: var(--add-part-bg);
+            color: var(--button-color);
             border: none;
             cursor: pointer;
-            width: auto;
+            padding: 8px 15px;
+            margin-top: 10px;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+        .add-part:hover {
+            background-color: var(--add-part-hover);
+        }
+        .mode-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 26px;
+            background-color: var(--toggle-bg);
+            border-radius: 13px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .mode-toggle::before {
+            content: "";
+            position: absolute;
+            left: 2px;
+            top: 2px;
+            width: 22px;
+            height: 22px;
+            background-color: var(--toggle-button);
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+        .mode-toggle.dark::before {
+            transform: translateX(24px);
+        }
+        .history {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: var(--result-bg);
+            border-radius: 5px;
+        }
+        .history h3 {
+            margin-top: 0;
+            color: var(--header-color);
+        }
+        .history ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .history li {
+            margin-bottom: 5px;
+        }
+        .watermark {
+            font-size: 10px;
+            color: var(--disclaimer-color);
+            text-align: center;
+            margin-top: 20px;
+            opacity: 0.3;
         }
     </style>
 </head>
 <body>
+    <div class="mode-toggle" onclick="toggleDarkMode()"></div>
     <div class="container">
         <h1>Oil Change Labor Cost Calculator</h1>
-        
-        <!-- Input for quarts of oil -->
+
         <label for="quarts">Number of Quarts of Oil (min 4):</label>
         <input type="number" id="quarts" min="4" value="4" required>
 
-        <!-- Input for rate per quart -->
         <label for="ratePerQuart">Rate per Quart:</label>
         <input type="number" id="ratePerQuart" step="0.01" value="6.27" required>
-        
-        <!-- Input for part costs (multiple) -->
-        <label>Enter Additional Part Costs:</label>
+
+        <label>Additional Part Costs:</label>
         <div id="partCostsContainer">
             <input type="number" placeholder="Part cost" step="0.01">
             <input type="number" placeholder="Part cost" step="0.01">
         </div>
-        <button type="button" class="add-part" onclick="addPartCost()">+</button>
-        
-        <!-- Button to calculate the labor cost -->
-        <button onclick="calculateLabor()">Calculate Labor Cost</button>
-        
-        <!-- Display the result with a copy button -->
+        <button type="button" class="add-part" onclick="addPartCost()">Add Part Cost</button>
+
+        <button class="calculate-btn" onclick="calculateLabor()">Calculate Labor Cost</button>
+
         <div class="result">
-            <span id="result">The labor cost is: $0.00</span>
-            <button type="button" onclick="copyToClipboard()">Copy</button>
+            <div>Labor Cost:</div>
+            <div id="result" class="result-value">$0.00</div>
+            <button class="copy-btn" onclick="copyToClipboard()">Copy</button>
         </div>
 
-        <!-- Disclaimer at the bottom -->
+        <div class="history">
+            <h3>Calculation History</h3>
+            <ul id="historyList"></ul>
+        </div>
+
         <div class="disclaimer">
             * The calculation assumes a static oil change cost of $69.99. Oil is charged at the specified rate per quart, with a minimum of 4 quarts and a maximum charge at 5 quarts, even if more quarts are used.
+        </div>
+        
+        <div class="watermark">
+            Developed by © Ricardo Corona
         </div>
     </div>
 
     <script>
         const oilChangeCost = 69.99;
         const maxQuarts = 5;
-
+        let history = [];
+    
         function calculateLabor() {
             let numberOfQuarts = parseFloat(document.getElementById('quarts').value);
             let ratePerQuart = parseFloat(document.getElementById('ratePerQuart').value);
             let partCostsContainer = document.getElementById('partCostsContainer');
             let partCostInputs = partCostsContainer.getElementsByTagName('input');
             let partCosts = Array.from(partCostInputs).map(input => parseFloat(input.value) || 0);
-
+    
             let quartsCost = Math.min(numberOfQuarts, maxQuarts) * ratePerQuart;
             let totalPartCosts = partCosts.reduce((sum, partCost) => sum + partCost, 0);
             let totalCost = quartsCost + totalPartCosts;
             let laborCost = Math.abs(oilChangeCost - totalCost).toFixed(2);
-
-            document.getElementById('result').innerText = `The labor cost is: $${laborCost}`;
+    
+            document.getElementById('result').innerText = `$${laborCost}`;
+    
+            // Add to history
+            history.unshift({
+                quarts: numberOfQuarts,
+                rate: ratePerQuart,
+                partCosts: partCosts,
+                laborCost: laborCost
+            });
+            updateHistory();
         }
-
+    
         function addPartCost() {
             let newInput = document.createElement('input');
             newInput.type = 'number';
@@ -107,18 +293,44 @@
             newInput.step = '0.01';
             document.getElementById('partCostsContainer').appendChild(newInput);
         }
-
+    
         function copyToClipboard() {
             let resultText = document.getElementById('result').innerText;
-            let numericValue = resultText.match(/[\d.]+/)[0];  // Extract only the digits and decimal point
-            
-            // Copy the numeric value to the clipboard
+            let numericValue = resultText.match(/[\d.]+/)[0];
+    
             navigator.clipboard.writeText(numericValue).then(function() {
                 alert('Labor cost copied to clipboard!');
             }, function(err) {
                 console.error('Could not copy text: ', err);
             });
         }
+    
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            document.querySelector('.mode-toggle').classList.toggle('dark');
+        }
+    
+        function updateHistory() {
+            const historyList = document.getElementById('historyList');
+            historyList.innerHTML = '';
+            history.slice(0, 5).forEach((item, index) => {
+                const partCostsDetails = item.partCosts.length > 0 ? 
+                    ` | Parts: ${item.partCosts.map(cost => `$${cost.toFixed(2)}`).join(', ')}` : 
+                    '';
+                const li = document.createElement('li');
+                li.textContent = `#${index + 1}: $${item.laborCost} (${item.quarts} quarts @ $${item.rate}/qt${partCostsDetails})`;
+                historyList.appendChild(li);
+            });
+        }
+    
+        // Add event listeners for Enter key
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    calculateLabor();
+                }
+            });
+        });
     </script>
 </body>
 </html>
