@@ -53,6 +53,10 @@
         <!-- Input for quarts of oil -->
         <label for="quarts">Number of Quarts of Oil (min 4):</label>
         <input type="number" id="quarts" min="4" value="4" required>
+
+        <!-- Input for rate per quart -->
+        <label for="ratePerQuart">Rate per Quart:</label>
+        <input type="number" id="ratePerQuart" step="0.01" value="6.27" required>
         
         <!-- Input for part costs (multiple) -->
         <label>Enter Additional Part Costs:</label>
@@ -73,22 +77,22 @@
 
         <!-- Disclaimer at the bottom -->
         <div class="disclaimer">
-            * The calculation assumes a static oil change cost of $69.99. Oil is charged at $6.27 per quart, with a minimum of 4 quarts and a maximum charge at 5 quarts, even if more quarts are used.
+            * The calculation assumes a static oil change cost of $69.99. Oil is charged at the specified rate per quart, with a minimum of 4 quarts and a maximum charge at 5 quarts, even if more quarts are used.
         </div>
     </div>
 
     <script>
         const oilChangeCost = 69.99;
-        const costPerQuart = 6.27;
         const maxQuarts = 5;
 
         function calculateLabor() {
             let numberOfQuarts = parseFloat(document.getElementById('quarts').value);
+            let ratePerQuart = parseFloat(document.getElementById('ratePerQuart').value);
             let partCostsContainer = document.getElementById('partCostsContainer');
             let partCostInputs = partCostsContainer.getElementsByTagName('input');
             let partCosts = Array.from(partCostInputs).map(input => parseFloat(input.value) || 0);
 
-            let quartsCost = Math.min(numberOfQuarts, maxQuarts) * costPerQuart;
+            let quartsCost = Math.min(numberOfQuarts, maxQuarts) * ratePerQuart;
             let totalPartCosts = partCosts.reduce((sum, partCost) => sum + partCost, 0);
             let totalCost = quartsCost + totalPartCosts;
             let laborCost = Math.abs(oilChangeCost - totalCost).toFixed(2);
