@@ -27,56 +27,90 @@
         .result {
             margin-top: 20px;
             font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .disclaimer {
+            font-size: 12px;
+            color: grey;
+            margin-top: 10px;
+        }
+        .add-part {
+            margin-top: 5px;
+            padding: 5px;
+            background-color: #ddd;
+            border: none;
+            cursor: pointer;
+            width: auto;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Oil Change Labor Cost Calculator</h1>
-
+        
         <!-- Input for quarts of oil -->
         <label for="quarts">Number of Quarts of Oil (min 4):</label>
         <input type="number" id="quarts" min="4" value="4" required>
-
+        
         <!-- Input for part costs (multiple) -->
-        <label for="partCosts">Enter Additional Part Costs (comma separated):</label>
-        <input type="text" id="partCosts" placeholder="e.g. 15.99, 12.50">
-
+        <label>Enter Additional Part Costs:</label>
+        <div id="partCostsContainer">
+            <input type="number" placeholder="Part cost" step="0.01">
+            <input type="number" placeholder="Part cost" step="0.01">
+        </div>
+        <button type="button" class="add-part" onclick="addPartCost()">+</button>
+        
         <!-- Button to calculate the labor cost -->
         <button onclick="calculateLabor()">Calculate Labor Cost</button>
+        
+        <!-- Display the result with a copy button -->
+        <div class="result">
+            <span id="result">The labor cost is: $0.00</span>
+            <button type="button" onclick="copyToClipboard()">Copy</button>
+        </div>
 
-        <!-- Display the result -->
-        <div class="result" id="result"></div>
+        <!-- Disclaimer at the bottom -->
+        <div class="disclaimer">
+            * The calculation assumes a static oil change cost of $69.99. Oil is charged at $6.27 per quart, with a minimum of 4 quarts and a maximum charge at 5 quarts, even if more quarts are used.
+        </div>
     </div>
 
     <script>
-        // JavaScript logic to calculate labor cost
         const oilChangeCost = 69.99;
         const costPerQuart = 6.27;
         const maxQuarts = 5;
 
         function calculateLabor() {
-            // Get input values
             let numberOfQuarts = parseFloat(document.getElementById('quarts').value);
-            let partCostsInput = document.getElementById('partCosts').value;
+            let partCostsContainer = document.getElementById('partCostsContainer');
+            let partCostInputs = partCostsContainer.getElementsByTagName('input');
+            let partCosts = Array.from(partCostInputs).map(input => parseFloat(input.value) || 0);
 
-            // Parse part costs
-            let partCosts = partCostsInput ? partCostsInput.split(',').map(cost => parseFloat(cost.trim())) : [];
-
-            // Calculate quart cost, capped at 5 quarts
             let quartsCost = Math.min(numberOfQuarts, maxQuarts) * costPerQuart;
-
-            // Sum part costs
             let totalPartCosts = partCosts.reduce((sum, partCost) => sum + partCost, 0);
-
-            // Calculate total cost
             let totalCost = quartsCost + totalPartCosts;
-
-            // Calculate labor cost as the absolute difference from the oil change cost
             let laborCost = Math.abs(oilChangeCost - totalCost).toFixed(2);
 
-            // Display the result
             document.getElementById('result').innerText = `The labor cost is: $${laborCost}`;
+        }
+
+        function addPartCost() {
+            let newInput = document.createElement('input');
+            newInput.type = 'number';
+            newInput.placeholder = 'Part cost';
+            newInput.step = '0.01';
+            document.getElementById('partCostsContainer').appendChild(newInput);
+        }
+
+        function copyToClipboard() {
+            let resultText = document.getElementById('result').innerText;
+            navigator.clipboard.writeText(resultText).then(function() {
+                alert('Labor cost copied to clipboard!');
+            }, function(err) {
+                console.error('Could not copy text: ', err);
+            });
         }
     </script>
 </body>
