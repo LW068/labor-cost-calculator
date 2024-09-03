@@ -6,37 +6,15 @@
     <title>Oil Change Labor Cost Calculator</title>
     <style>
         :root {
-            --bg-color: #f8f9fa;
-            --container-bg: white;
-            --text-color: #333;
-            --header-color: #2c3e50;
-            --label-color: #34495e;
-            --input-border: #bdc3c7;
-            --input-focus: #3498db;
-            --button-bg: #3498db;
-            --button-color: white;
-            --button-hover: #2980b9;
-            --result-bg: #ecf0f1;
-            --result-color: #2c3e50;
-            --copy-button-bg: #2ecc71;
-            --copy-button-hover: #27ae60;
-            --disclaimer-color: #7f8c8d;
-            --add-part-bg: #95a5a6;
-            --add-part-hover: #7f8c8d;
-            --glow-color: rgba(255, 255, 255, 0.1);
-            --toggle-bg: #ddd;
-            --toggle-button: #fff;
-        }
-
-        .dark-mode {
             --bg-color: #2c3e50;
             --container-bg: #34495e;
             --text-color: #ecf0f1;
             --header-color: #3498db;
             --label-color: #bdc3c7;
+            --input-bg: #2c3e50;
             --input-border: #7f8c8d;
             --input-focus: #2980b9;
-            --button-bg: #2980b9;
+            --button-bg: #3498db;
             --button-color: #ecf0f1;
             --button-hover: #2980b9;
             --result-bg: #2e4155;
@@ -46,55 +24,44 @@
             --disclaimer-color: #bdc3c7;
             --add-part-bg: #7f8c8d;
             --add-part-hover: #95a5a6;
-            --glow-color: rgba(52, 152, 219, 0.1);
-            --toggle-bg: #555;
-            --toggle-button: #34495e;
+            --toggle-bg: #2c3e50;
+            --toggle-button: #ecf0f1;
         }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            padding: 20px;
             background-color: var(--bg-color);
             color: var(--text-color);
-            transition: all 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
         }
+
         .container {
-            max-width: 500px;
-            margin: 0 auto;
             background: var(--container-bg);
             padding: 30px;
             border-radius: 15px;
-            box-shadow: 0 4px 20px var(--glow-color), 0 0 0 1px rgba(255, 255, 255, 0.1);
-            position: relative;
-            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
         }
-        .container::before {
-            content: "";
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, var(--glow-color) 0%, transparent 70%);
-            opacity: 0.5;
-            pointer-events: none;  /* This allows clicks to pass through */
-            z-index: 0;  /* Ensures the pseudo-element stays behind the content */
-        }
-        .container > * {
-            position: relative;  /* Ensures all child elements are above the pseudo-element */
-            z-index: 1;
-        }
+
         h1 {
             color: var(--header-color);
-            margin-bottom: 20px;
             text-align: center;
+            margin-bottom: 20px;
         }
+
         label {
             display: block;
             margin-top: 15px;
-            font-weight: bold;
             color: var(--label-color);
         }
+
         input, button {
             width: 100%;
             padding: 12px;
@@ -102,25 +69,29 @@
             font-size: 16px;
             border: 1px solid var(--input-border);
             border-radius: 5px;
-            box-sizing: border-box;
-            background-color: var(--container-bg);
+            background-color: var(--input-bg);
             color: var(--text-color);
+            box-sizing: border-box;
         }
+
         input:focus {
             outline: none;
             border-color: var(--input-focus);
-            box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+            box-shadow: 0 0 5px rgba(41, 128, 185, 0.5);
         }
-        .calculate-btn {
+
+        button {
             background-color: var(--button-bg);
             color: var(--button-color);
             border: none;
             cursor: pointer;
             transition: background-color 0.3s;
         }
-        .calculate-btn:hover {
+
+        button:hover {
             background-color: var(--button-hover);
         }
+
         .result {
             margin-top: 20px;
             padding: 15px;
@@ -128,98 +99,148 @@
             border-radius: 5px;
             text-align: center;
         }
+
         .result-value {
             font-size: 24px;
             font-weight: bold;
             color: var(--result-color);
         }
+
         .copy-btn {
             background-color: var(--copy-button-bg);
-            color: var(--button-color);
-            border: none;
-            cursor: pointer;
-            padding: 8px 15px;
             margin-top: 10px;
-            font-size: 14px;
-            transition: background-color 0.3s;
         }
+
         .copy-btn:hover {
             background-color: var(--copy-button-hover);
         }
+
         .disclaimer {
             font-size: 12px;
             color: var(--disclaimer-color);
             margin-top: 20px;
             text-align: center;
-            opacity: 0.6;
+            opacity: 0.8;
         }
+
         .add-part {
             background-color: var(--add-part-bg);
-            color: var(--button-color);
-            border: none;
-            cursor: pointer;
-            padding: 8px 15px;
-            margin-top: 10px;
-            font-size: 14px;
-            transition: background-color 0.3s;
         }
+
         .add-part:hover {
             background-color: var(--add-part-hover);
         }
-        .mode-toggle {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            width: 50px;
-            height: 26px;
-            background-color: var(--toggle-bg);
-            border-radius: 13px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .mode-toggle::before {
-            content: "";
-            position: absolute;
-            left: 2px;
-            top: 2px;
-            width: 22px;
-            height: 22px;
-            background-color: var(--toggle-button);
-            border-radius: 50%;
-            transition: transform 0.3s;
-        }
-        .mode-toggle.dark::before {
-            transform: translateX(24px);
-        }
+
         .history {
             margin-top: 20px;
             padding: 15px;
             background-color: var(--result-bg);
             border-radius: 5px;
         }
+
         .history h3 {
             margin-top: 0;
             color: var(--header-color);
         }
+
         .history ul {
             list-style-type: none;
             padding: 0;
         }
+
         .history li {
             margin-bottom: 5px;
+            font-size: 14px;
         }
+
         .watermark {
             font-size: 10px;
             color: var(--disclaimer-color);
             text-align: center;
             margin-top: 20px;
-            opacity: 0.3;
+            opacity: 0.5;
+        }
+
+        .toggle-container {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .toggle-label {
+            margin-top: 15px;
+            margin-right: 10px;
+            font-size: 14px;
+            color: var(--label-color);
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--toggle-bg);
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: var(--toggle-button);
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: var(--button-bg);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+        }
+
+        /* Make the entire toggle clickable */
+        .toggle-switch input {
+            position: absolute;
+            width:100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+            z-index: 1;
         }
     </style>
 </head>
 <body>
-    <div class="mode-toggle" onclick="toggleDarkMode()"></div>
     <div class="container">
+        <div class="toggle-container">
+            <span class="toggle-label">Diesel</span>
+            <label class="toggle-switch">
+                <input type="checkbox" id="dieselToggle" onchange="updateOilChangeCost()">
+                <span class="toggle-slider"></span>
+            </label>
+        </div>
+
         <h1>Oil Change Labor Cost Calculator</h1>
 
         <label for="quarts">Number of Quarts of Oil (min 4):</label>
@@ -249,7 +270,7 @@
         </div>
 
         <div class="disclaimer">
-            * The calculation assumes a static oil change cost of $69.99. Oil is charged at the specified rate per quart, with a minimum of 4 quarts and a maximum charge at 5 quarts, even if more quarts are used.
+            * The calculation assumes a static oil change cost of $69.99 for regular oil and $129.99 for diesel. Oil is charged at the specified rate per quart, with a minimum of 4 quarts and a maximum charge at 5 quarts, even if more quarts are used.
         </div>
         
         <div class="watermark">
@@ -258,11 +279,17 @@
     </div>
 
     <script>
-        const oilChangeCost = 69.99;
+        let oilChangeCost = 69.99;
         const maxQuarts = 5;
         let history = [];
     
+        function updateOilChangeCost() {
+            const isDiesel = document.getElementById('dieselToggle').checked;
+            oilChangeCost = isDiesel ? 129.99 : 69.99;
+        }
+
         function calculateLabor() {
+            updateOilChangeCost();
             let numberOfQuarts = parseFloat(document.getElementById('quarts').value);
             let ratePerQuart = parseFloat(document.getElementById('ratePerQuart').value);
             let partCostsContainer = document.getElementById('partCostsContainer');
@@ -281,7 +308,8 @@
                 quarts: numberOfQuarts,
                 rate: ratePerQuart,
                 partCosts: partCosts,
-                laborCost: laborCost
+                laborCost: laborCost,
+                isDiesel: document.getElementById('dieselToggle').checked
             });
             updateHistory();
         }
@@ -317,8 +345,9 @@
                 const partCostsDetails = item.partCosts.length > 0 ? 
                     ` | Parts: ${item.partCosts.map(cost => `$${cost.toFixed(2)}`).join(', ')}` : 
                     '';
+                const dieselInfo = item.isDiesel ? ' (Diesel)' : '';
                 const li = document.createElement('li');
-                li.textContent = `#${index + 1}: $${item.laborCost} (${item.quarts} quarts @ $${item.rate}/qt${partCostsDetails})`;
+                li.textContent = `#${index + 1}: $${item.laborCost}${dieselInfo} (${item.quarts} quarts @ $${item.rate}/qt${partCostsDetails})`;
                 historyList.appendChild(li);
             });
         }
